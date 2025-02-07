@@ -52,4 +52,38 @@ router.post("/accept-request", async (req, res) => {
     }
 })
 
-export {onlineInterviewers}
+router.post("/add-skills", async (req, res) => {
+    try {
+        const { userId, skills } = req.body;
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        })
+        if (!user) {
+            res.status(404).json({ message: "User does not exist" });
+            return;
+        }
+
+        await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                interviewerInfo: {
+                    update: {
+                        skills: skills
+                    }
+                }
+            }
+        });
+
+        res.status(200).json({ message: "Updated skills successfully" });
+
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+})
+
+export { onlineInterviewers }
+export default router

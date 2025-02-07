@@ -7,6 +7,7 @@ import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { PrismaClient } from "@prisma/client";
 import cookieParser from "cookie-parser";
 import CandidateHandler from "./services/candidate"
+import InterviewerHandler from "./services/interviewer"
 
 dotenv.config();
 
@@ -109,7 +110,12 @@ app.get(
             }
         }
         
-        res.redirect("http://localhost:5173/home");
+        if (isInterviewer) {
+            res.redirect("http://localhost:5173/home/2");
+        }
+        else {
+            res.redirect("http://localhost:5173/home");
+        }
     }
 );
 
@@ -121,13 +127,14 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/user", async (req, res) => {
-    console.log(req.session, "\n", req.user);
-    console.log(req.isAuthenticated());
     if (req.isAuthenticated()) {
         const user: any = req.user;
         const data = await prisma.user.findUnique({
             where: {
                 id: user.id
+            },
+            include: {
+                interviewerInfo: true
             }
         })
         res.json({
@@ -135,7 +142,9 @@ app.get("/user", async (req, res) => {
             name: user.displayName,
             image: user._json.picture,
             email: user._json.email,
-            isInterviewer: !!data?.isInterviewer
+            isInterviewer: !!data?.isInterviewer,
+            skills: data?.interviewerInfo?.skills,
+            interviewCount: data?.interviewerInfo?.count
         });
     }
     else {
@@ -144,6 +153,7 @@ app.get("/user", async (req, res) => {
 })
 
 app.use("/candidate", CandidateHandler)
+app.use("/interviewer", InterviewerHandler)
 
 // Start Server
 app.listen(PORT, () => {
