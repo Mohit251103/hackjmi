@@ -7,24 +7,30 @@ import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
 
 const NavbarComponent:React.FC = () => {
     return (
-        <div className="flex justify-around items-center flex-wrap gap-5 absolute top-0 bg-rose-200 w-full min-h-12">
+        <div className="flex justify-around items-center flex-wrap gap-5 w-full min-h-12 text-zinc-900">
 
             <img className="w-12" src="/logo.svg" alt="error"/>
 
-            <div className="flex justify-center items-center flex-wrap gap-5">
-            <NavLink to="/" className=" flex items-center justify-center rounded-lg">
+            <div className="flex justify-center items-center flex-wrap gap-6">
+            <NavLink to="/" className="text-black flex gap-2 items-center justify-center rounded-lg hover:text-sky-400 ">
                 <OtherHousesIcon />
-                <span className="btm-nav-label text-xs sm:text-lg md:text-md">Home  </span>
+                <span className="btm-nav-label text-xs sm:text-lg md:text-sm">Home  </span>
             </NavLink>
-            <NavLink to="/" className="flex items-center justify-center ">
+            <NavLink to="/" className="flex gap-2 items-center justify-center hover:text-sky-400">
                 <IntegrationInstructionsIcon/>
-                <span className="btm-nav-label text-xs sm:text-lg md:text-md">My Interviews </span>
+                <span className="btm-nav-label text-xs sm:text-lg md:text-sm">My Interviews </span>
             </NavLink>
-            <NavLink to="/" className="flex items-center justify-center">
+            <NavLink to="/" className="flex gap-2 items-center justify-center hover:text-sky-400">
                 < ModelTrainingIcon/>
-                <span className="btm-nav-label text-xs sm:text-lg md:text-md">Progress </span>
+                <span className="btm-nav-label text-xs sm:text-lg md:text-sm">Progress </span>
             </NavLink>
       </div>
+
+            <div>
+
+                <button className="bg-sky-400 text-white p-2 rounded-lg">Profile </button>
+
+            </div>
 
         </div>
     )

@@ -6,9 +6,10 @@ import GoogleIcon from '@mui/icons-material/Google';
 const LandingPage: React.FC = () => {
     const navigate = useNavigate();
 
+
     return (
         <div
-            className={`h-screen w-screen flex justify-center items-center bg-transparent flex-col gap-5`}>
+            className={`h-screen w-screen flex justify-center items-center bg-sky-100 flex-col gap-5`}>
             <div className='flex gap-5 justify-center items-center'>
                 <img className="w-40" src="/logo.svg" alt="error"/>
                 <div
@@ -21,7 +22,9 @@ const LandingPage: React.FC = () => {
                 Experience With Senior Mock Interviews
             </div>
 
-            <Button onClick={() => navigate('/home')}
+            <Button
+                    variant={'contained'}
+                    onClick={() => navigate('/home')}
                     startIcon={<GoogleIcon/>}
                     className={`font-bold `}>Start </Button>
 
