@@ -10,7 +10,7 @@ import ProtectedComponent from "./Components/SingleComponents/ProtectiveComponen
 import {useUserStore} from "./store/User.store.ts";
 
 function App() {
-    const user = useUserStore(state => state.user);
+    const user = useUserStore((state:any) => state.user);
     return (
         <BrowserRouter>
             <Routes>
