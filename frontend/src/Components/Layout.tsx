@@ -5,7 +5,7 @@ import NavbarComponent from './NavigationBar'
 const Layout: React.FC = () => {
     return (
 
-        <div className={`h-screen w-full flex items-center flex-col pl-20 pr-20`}>
+        <div className={`h-screen w-full flex items-center flex-col`}>
 
             <NavbarComponent />
             <div className="flex-1">

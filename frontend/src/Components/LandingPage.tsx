@@ -1,10 +1,10 @@
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
+// import {useNavigate} from 'react-router-dom';
 import {Button} from "@mui/material";
 import GoogleIcon from '@mui/icons-material/Google';
 
 const LandingPage: React.FC = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const handleGoogleLogin = (logger?: string) => {
         if (logger == 'interviewer') {
