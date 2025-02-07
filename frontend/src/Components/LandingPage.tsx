@@ -15,7 +15,7 @@ const LandingPage: React.FC = () => {
 
     return (
         <div
-            className={`h-screen w-screen flex justify-center items-center bg-transparent flex-col gap-5`}>
+            className={`h-screen w-screen flex justify-center items-center bg-sky-100 flex-col gap-5`}>
             <div className='flex gap-5 justify-center items-center'>
                 <img className="w-40" src="/logo.svg" alt="error"/>
                 <div
@@ -27,6 +27,7 @@ const LandingPage: React.FC = () => {
             <div className='text-sm sm:text-3xl font-poppins font-extrabold text-center'> Elevate Your
                 Experience With Senior Mock Interviews
             </div>
+
 
             <Button onClick={() => { handleGoogleLogin('interviewer') }}
                     startIcon={<GoogleIcon/>}
