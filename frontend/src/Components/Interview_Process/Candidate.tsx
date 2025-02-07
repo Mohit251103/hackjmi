@@ -2,8 +2,8 @@ import { Button } from "@mui/material"
 import NavbarComponent from "../SingleComponents/NavigationBar.tsx"
 import { useEffect, useState } from "react"
 import axiosInstance from "../../utils/axiosInstance";
-import { Navigate, useNavigate } from "react-router-dom";
-import socket from "../../utils/socket";
+import { useNavigate } from "react-router-dom";
+// import socket from "../../utils/socket";
 
 const hardcodedSkills = [
     "JavaScript", "React", "Node.js", "Python", "C++",
