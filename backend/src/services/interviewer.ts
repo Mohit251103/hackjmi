@@ -25,7 +25,7 @@ io.on("connection", (socket) => {
 
 })
 
-router.use("/accept-request", async (req, res) => {
+router.post("/accept-request", async (req, res) => {
     try {
         const { requestId, interviewerId } = req.body;
         const request = await prisma.interviewRequest.findUnique({
@@ -51,7 +51,5 @@ router.use("/accept-request", async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 })
-
-router.use()
 
 export {onlineInterviewers}
