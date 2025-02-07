@@ -7,10 +7,11 @@ const TeacherDashboard=()=>{
 
             <div className="flex w-1/2">
 
-                 <h2> LInk to Start Meeting </h2>
+                 <h2> Link to Start Meeting </h2>
 
             </div>
             <div className="flex flex-1">
+
                 Animation right side Show off
             </div>
 

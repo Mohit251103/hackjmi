@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Outlet } from 'react-router-dom'
-import NavbarComponent from './NavigationBar'
+import NavbarComponent from './NavigationBar.tsx'
+
 
 const Layout: React.FC = () => {
+
 
     return (
 
@@ -13,6 +15,7 @@ const Layout: React.FC = () => {
             <Outlet />
             </div>
         </div>
+
 
 
 

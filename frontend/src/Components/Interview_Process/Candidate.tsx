@@ -1,5 +1,5 @@
 import { Button } from "@mui/material"
-import NavbarComponent from "../NavigationBar"
+import NavbarComponent from "../SingleComponents/NavigationBar.tsx"
 import { useEffect, useState } from "react"
 import axiosInstance from "../../utils/axiosInstance";
 import { Navigate, useNavigate } from "react-router-dom";

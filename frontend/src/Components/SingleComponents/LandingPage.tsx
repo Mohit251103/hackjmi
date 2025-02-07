@@ -1,10 +1,17 @@
-import React, { useEffect } from 'react';
-// import {useNavigate} from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {useUserStore} from '../../store/User.store.ts';
 import {Button} from "@mui/material";
 import GoogleIcon from '@mui/icons-material/Google';
 
+
 const LandingPage: React.FC = () => {
-    // const navigate = useNavigate();
+
+    const user = useUserStore(state=>state.user);
+
+    useEffect(()=>{
+        console.log(user)
+    },[])
+
 
     const handleGoogleLogin = (logger?: string) => {
         if (logger == 'interviewer') {
