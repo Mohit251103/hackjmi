@@ -6,6 +6,13 @@ import GoogleIcon from '@mui/icons-material/Google';
 const LandingPage: React.FC = () => {
     const navigate = useNavigate();
 
+    const handleGoogleLogin = (logger?: string) => {
+        if (logger == 'interviewer') {
+            window.location.href = "http://localhost:3000/auth/google?isInterviewer=true";
+        }
+        else window.location.href = "http://localhost:3000/auth/google";
+    };
+
     return (
         <div
             className={`h-screen w-screen flex justify-center items-center bg-transparent flex-col gap-5`}>
@@ -21,9 +28,12 @@ const LandingPage: React.FC = () => {
                 Experience With Senior Mock Interviews
             </div>
 
-            <Button onClick={() => navigate('/home')}
+            <Button onClick={() => { handleGoogleLogin('interviewer') }}
                     startIcon={<GoogleIcon/>}
-                    className={`font-bold `}>Start </Button>
+                    className={`font-bold `}>Start as Interviewer</Button>
+            <Button onClick={() => { handleGoogleLogin() }}
+                    startIcon={<GoogleIcon/>}
+                    className={`font-bold `}>Start as Interviewee</Button>
 
 
         </div>
