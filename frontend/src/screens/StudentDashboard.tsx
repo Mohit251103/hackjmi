@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Typography, Box, Button, TextField, Container} from '@mui/material';
+import axiosInstance from "../utils/axiosInstance.ts";
 
 const StudentDashboard: React.FC = () => {
 
@@ -7,13 +8,24 @@ const StudentDashboard: React.FC = () => {
         "https://files.iamvector.com/assets/img/about-img.svg",
         "https://www.gstatic.com/meet/user_edu_safety_light_e04a2bbb449524ef7e49ea36d5f25b65.svg",
         "https://images.pexels.com/photos/6953843/pexels-photo-6953843.jpeg",
-
-
     ];
 
     const [image, setImage] = useState<number>(0);
 
+
+
     useEffect(() => {
+
+        const call=async()=> {
+            try {
+                const response = await axiosInstance.get('/user');  // ✅ Wait for the response
+                console.log(response.data);  // ✅ Correct way to access response data
+            } catch (error) {
+                console.error("Error fetching user:", error);
+            }
+        }
+        call();
+
 
        const intervals=setTimeout(() => {
 
