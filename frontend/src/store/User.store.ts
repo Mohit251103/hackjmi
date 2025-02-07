@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 
-
 interface UserDetails {
     id:string
     name:string
@@ -15,6 +14,7 @@ interface UserState{
 }
 
 export const useUserStore = create<UserState>((set) => ({
+
         user:null,
         setUser: (newUser) => set({ user: newUser }),
         clearUser: () => set({ user: null }),

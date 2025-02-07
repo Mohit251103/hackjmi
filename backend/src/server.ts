@@ -120,6 +120,8 @@ app.get("/logout", (req, res) => {
 });
 
 app.get("/user", async (req, res) => {
+    console.log(req.session, "\n", req.user);
+    console.log(req.isAuthenticated());
     if (req.isAuthenticated()) {
         const user: any = req.user;
         const data = await prisma.user.findUnique({

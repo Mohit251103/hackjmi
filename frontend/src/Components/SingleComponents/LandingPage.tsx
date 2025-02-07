@@ -1,12 +1,11 @@
 import React, {useEffect} from 'react';
-import {useUserStore} from '../store/User.store';
+import {useUserStore} from '../../store/User.store.ts';
 import {Button} from "@mui/material";
 import GoogleIcon from '@mui/icons-material/Google';
 
 
 const LandingPage: React.FC = () => {
 
-    // const setUser= useUserStore(state=>state.setUser);
     const user = useUserStore(state=>state.user);
 
     useEffect(()=>{

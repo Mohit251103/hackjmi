@@ -1,8 +1,11 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-import NavbarComponent from './NavigationBar'
+import NavbarComponent from './NavigationBar.tsx'
+
 
 const Layout: React.FC = () => {
+
+
     return (
 
         <div className={`h-screen w-full flex items-center flex-col`}>
@@ -12,6 +15,7 @@ const Layout: React.FC = () => {
             <Outlet />
             </div>
         </div>
+
 
 
 
