@@ -6,9 +6,9 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 let onlineInterviewers : {[key : string] : string} = {}
-io.on("connection", (socket) => {
+io.on("connection", (socket: any) => {
 
-    socket.on("join_as_interviewer", async (userId) => {
+    socket.on("join_as_interviewer", async (userId: string) => {
         onlineInterviewers[userId] = socket.id;
         console.log(`Interviewer ${userId} connected`);
     });
@@ -86,4 +86,4 @@ router.post("/add-skills", async (req, res) => {
 })
 
 export { onlineInterviewers }
-export default router
+export default router   

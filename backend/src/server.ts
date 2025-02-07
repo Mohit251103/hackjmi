@@ -8,10 +8,13 @@ import { PrismaClient } from "@prisma/client";
 import cookieParser from "cookie-parser";
 import CandidateHandler from "./services/candidate"
 import InterviewerHandler from "./services/interviewer"
+import http from 'http'
+import "./utils/socketConf"
 
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app);
 const PORT = 3000;
 const prisma = new PrismaClient();
 
@@ -122,7 +125,7 @@ app.get(
 // Logout Route
 app.get("/logout", (req, res) => {
     req.logout(() => {
-        res.redirect("http://localhost:3000");
+        res.redirect("http://localhost:5173");
     });
 });
 
@@ -156,6 +159,8 @@ app.use("/candidate", CandidateHandler)
 app.use("/interviewer", InterviewerHandler)
 
 // Start Server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
+
+export default server;

@@ -41,6 +41,6 @@ model InterviewRequest {
   status        String   @default("pending") // "pending", "accepted"
   createdAt     DateTime @default(now())
 
-  user        User  @relation(fields: [userId], references: [id], name: "UserInterviewRequests")
-  interviewer User? @relation(fields: [interviewerId], references: [id], name: "InterviewerInterviewRequests")
+  user        User  @relation(fields: [userId], references: [id], name: "UserInterviewRequests", onDelete: Cascade)
+  interviewer User? @relation(fields: [interviewerId], references: [id], name: "InterviewerInterviewRequests", onDelete: Cascade)
 }

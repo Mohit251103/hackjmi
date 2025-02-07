@@ -8,7 +8,13 @@ const prisma = new PrismaClient();
 
 router.post("/start-interview", async (req, res) => {
     try {
+        console.log("online interviewers: ",onlineInterviewers)
         const { userId, skills } = req.body;
+        const user = await prisma.user.findUnique({
+            where: {
+                id: userId
+            }
+        })
         const request = await prisma.interviewRequest.create({
             data: {
                 userId: userId,
@@ -16,7 +22,6 @@ router.post("/start-interview", async (req, res) => {
             }
         })
 
-        console.log(userId, skills)
         const interviewers = await prisma.user.findMany({
             where: {
                 isInterviewer: true,
@@ -27,6 +32,7 @@ router.post("/start-interview", async (req, res) => {
                 }
             }
         });
+        console.log("matched skills: ", interviewers)
         
         if (interviewers.length === 0) {
             res.status(404).json({ message: "Interviewers not available" });
@@ -37,7 +43,7 @@ router.post("/start-interview", async (req, res) => {
         for (let interviewer of interviewers){
             if (onlineInterviewers[interviewer.id]) {
                 present = true;
-                io.to(onlineInterviewers[interviewer.id]).emit('interview-request', request);
+                io.to(onlineInterviewers[interviewer.id]).emit('interview-request', {...request, name: user?.name, image: user?.image});
             }
         }
         if (!present) {

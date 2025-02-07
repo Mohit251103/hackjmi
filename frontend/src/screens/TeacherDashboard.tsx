@@ -2,9 +2,10 @@ import { Bell, Calendar, MessageSquare, PlusCircle, Users2, X } from "lucide-rea
 // import { useEffect, useState } from "react";
 import { useUserStore } from "../store/User.store";
 import { styled } from '@mui/material/styles';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Chip, Paper, Snackbar } from "@mui/material";
 import axiosInstance from "../utils/axiosInstance";
+import socket from "../utils/socket";
 
 interface ChipData {
     key: number;
@@ -17,6 +18,18 @@ const ListItem = styled('li')(({ theme }) => ({
 interface ChipsArrayProps {
     chipData: string[];
     setChipData: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+interface InterviewRequest{
+    interviewerId: string | null;
+    id: string;
+    userId: string;
+    skill: string[];
+    status: string;
+    createdAt: Date;
+    name: string;
+    image: string;
+    date: string
 }
 
 const rawskills = [
@@ -129,6 +142,7 @@ const TeacherDashboard = () => {
     const [skills, setSkills] = useState<string[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
+    const [requests, setRequests] = useState<InterviewRequest[]>([]);
 
     const notifications = [
         {
@@ -183,6 +197,34 @@ const TeacherDashboard = () => {
             setOpen(true);
         }
     }
+
+    const handleAcceptInterview = () => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
+
+    useEffect(() => {
+
+        socket.emit("join_as_interviewer", user?.id);
+
+        socket.on("interview_request", (request: InterviewRequest) => {
+            setRequests((prev) => [...prev, request]);
+        });
+
+        socket.on("remove_request", (requestId) => {
+            setRequests((prev) => prev.filter((r) => r.id !== requestId));
+        });
+
+        return () => {
+            socket.disconnect();
+            socket.off("interview_request");
+            socket.off("remove_request");
+        };
+
+    }, [user?.id, user?.skills])
 
     return (
         <div className="mt-12 flex overflow-hidden flex-wrap justify-center gap-4">
@@ -297,43 +339,41 @@ const TeacherDashboard = () => {
                     </div>
 
                     {/* Right Section - 30% */}
-                    <div className="w-[30%] bg-white rounded-xl shadow-sm p-6">
+                    <div className="w-[30%] h-[60%] bg-white rounded-xl shadow-sm p-6 overflow-auto">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-lg font-semibold">Interview Requests</h3>
-                            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
-                                {notifications.length} New
-                            </span>
+                            {requests.length!==0 && <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+                                {requests.length} New
+                            </span>}
                         </div>
 
                         <div className="space-y-4">
-                            {notifications.map((notification) => (
+                            {requests.map((request) => (
                                 <div
-                                    key={notification.id}
+                                    key={request.id}
                                     className="p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
                                 >
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <h4 className="font-medium text-gray-900">
-                                                {notification.candidate}
+                                                {request.name}
                                             </h4>
-                                            <p className="text-sm text-gray-600">{notification.role}</p>
-                                            <p className="text-xs text-gray-500 mt-1">
-                                                {notification.time}
-                                            </p>
+                                            {request.status === 'pending' ?
+                                                <p className="text-xs text-red-500 mt-1">
+                                                    Pending
+                                                </p> :
+                                                <p className="text-xs text-green-500 mt-1">
+                                                    Accepted
+                                                </p>
+                                            }
                                         </div>
-                                        <button className="text-blue-600 hover:text-blue-700">
-                                            <Calendar className="w-5 h-5" />
+                                        <button className="text-blue-600 hover:text-blue-700" onClick={handleAcceptInterview}>
+                                            Accept
                                         </button>
                                     </div>
                                 </div>
                             ))}
                         </div>
-
-                        <button
-                            className="w-full mt-6 flex items-center justify-center text-gray-600 hover:text-gray-900">
-                            <MessageSquare className="w-4 h-4 mr-2" />
-                            View All Requests
-                        </button>
                     </div>
                 </div>
             </div>
