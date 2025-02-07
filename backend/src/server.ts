@@ -119,13 +119,20 @@ app.get("/logout", (req, res) => {
     });
 });
 
-app.get("/user", (req, res) => {
+app.get("/user", async (req, res) => {
     if (req.isAuthenticated()) {
-        const user:any = req.user;
+        const user: any = req.user;
+        const data = await prisma.user.findUnique({
+            where: {
+                id: user.id
+            }
+        })
         res.json({
             id: user.id,
             name: user.displayName,
-            image: user._json.picture
+            image: user._json.picture,
+            email: user._json.email,
+            isInterviewer: !!data?.isInterviewer
         });
     }
     else {
