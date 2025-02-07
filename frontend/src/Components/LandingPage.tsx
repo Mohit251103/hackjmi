@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import {useNavigate} from 'react-router-dom';
 import {Button} from "@mui/material";
 import GoogleIcon from '@mui/icons-material/Google';
+import axiosInstance from '../utils/axiosInstance';
 
 const LandingPage: React.FC = () => {
     // const navigate = useNavigate();
