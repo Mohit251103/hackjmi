@@ -13,20 +13,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String @id
-  name String 
-  email String @unique
-  image String
-  isInterviewer Boolean?
-  interviewerInfo InterviewerMeta?
-  createdAt DateTime @default(now())
+model User {
+  id                String             @id
+  name              String
+  email             String             @unique
+  image             String
+  isInterviewer     Boolean?
+  interviewerInfo   InterviewerMeta?
+  createdAt         DateTime           @default(now())
+  interviewRequests InterviewRequest[] @relation(name: "UserInterviewRequests")
+  interviewsTaken   InterviewRequest[] @relation(name: "InterviewerInterviewRequests")
 }
 
-model InterviewerMeta{
-  id String @id @default(uuid())
+model InterviewerMeta {
+  id     String   @id @default(uuid())
   skills String[]
-  count Int @default(0)
-  userId String @unique
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  count  Int      @default(0)
+  userId String   @unique
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model InterviewRequest {
+  id            String   @id @default(uuid())
+  userId        String
+  skill         String[]
+  interviewerId String? // NULL initially, gets filled when accepted
+  status        String   @default("pending") // "pending", "accepted"
+  createdAt     DateTime @default(now())
+
+  user        User  @relation(fields: [userId], references: [id], name: "UserInterviewRequests")
+  interviewer User? @relation(fields: [interviewerId], references: [id], name: "InterviewerInterviewRequests")
 }
