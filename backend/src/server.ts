@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { PrismaClient } from "@prisma/client";
 import cookieParser from "cookie-parser";
+import CandidateHandler from "./services/candidate"
 
 dotenv.config();
 
@@ -141,6 +142,8 @@ app.get("/user", async (req, res) => {
         res.status(401).send("Not authorized");
     }
 })
+
+app.use("/candidate", CandidateHandler)
 
 // Start Server
 app.listen(PORT, () => {

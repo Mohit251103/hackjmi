@@ -6,16 +6,17 @@ import {onlineInterviewers} from "./interviewer"
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.use("/start-interview", async (req, res) => {
+router.post("/start-interview", async (req, res) => {
     try {
         const { userId, skills } = req.body;
         const request = await prisma.interviewRequest.create({
             data: {
                 userId: userId,
-                skill: JSON.parse(skills)
+                skill: skills
             }
         })
 
+        console.log(userId, skills)
         const interviewers = await prisma.user.findMany({
             where: {
                 isInterviewer: true,
@@ -26,21 +27,23 @@ router.use("/start-interview", async (req, res) => {
                 }
             }
         });
-
-        if (!interviewers) {
+        
+        if (interviewers.length === 0) {
             res.status(404).json({ message: "Interviewers not available" });
+            return;
         }
 
         let present = false;
         for (let interviewer of interviewers){
             if (onlineInterviewers[interviewer.id]) {
                 present = true;
-                break;
+                io.to(onlineInterviewers[interviewer.id]).emit('interview-request', request);
             }
         }
-        if (!present) res.status(404).json({ message: "Interviewers not available" });
-        
-        io.emit('interview-request', request); // to be done
+        if (!present) {
+            res.status(404).json({ message: "Interviewers not available" });
+            return;
+        }
 
         res.status(200).json({ message: "Requests sent" });
         
@@ -48,5 +51,7 @@ router.use("/start-interview", async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 })
+
+export default router;
 
 
