@@ -16,11 +16,12 @@ function App() {
 
     return (
         <BrowserRouter>
+
             <Routes>
+
                 <Route path="/" element={user ? <Navigate to="/home"/> : <LandingPage/>}/>
                 <Route path="/home" element={<ProtectedComponent><Layout/></ProtectedComponent>}>
-                    <Route index element={<StudentDashboard/>}/>
-                    <Route path="2" element={<TeacherDashboard/>}/>
+                    <Route index element={user?user.isInterviewer?<TeacherDashboard/>:<StudentDashboard/>:<LandingPage/>}/>
                     <Route path="profile" element={<ProfilePage/>}/>
                     <Route path="interview" element={<InterviewRoute/>}/>
                     <Route
