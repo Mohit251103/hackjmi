@@ -144,30 +144,6 @@ const TeacherDashboard = () => {
     const [message, setMessage] = useState<string>("");
     const [requests, setRequests] = useState<InterviewRequest[]>([]);
 
-    const notifications = [
-        {
-            id: 1,
-            candidate: "Sarah Wilson",
-            role: "Frontend Developer",
-            time: "10 minutes ago",
-            status: "pending",
-        },
-        {
-            id: 2,
-            candidate: "Michael Chen",
-            role: "Full Stack Developer",
-            time: "1 hour ago",
-            status: "pending",
-        },
-        {
-            id: 3,
-            candidate: "Emma Thompson",
-            role: "UI/UX Designer",
-            time: "2 hours ago",
-            status: "pending",
-        },
-    ];
-
     const interviewer = {
         name: "Dr. John Smith",
         role: "Senior Technical Interviewer",
@@ -198,11 +174,15 @@ const TeacherDashboard = () => {
         }
     }
 
-    const handleAcceptInterview = () => {
+    const handleAcceptInterview = async (requestId: string) => {
         try {
-            
-        } catch (error) {
-            
+            const res = await axiosInstance.post("/interviewer/accept-request", { requestId, userId: user?.id })
+            setMessage(res.data.message);
+            setOpen(true);
+            const meet_res = await axiosInstance.get("/interviewer/generate-meet");
+            console.log(meet_res.data.link);
+        } catch (error : any) {
+            setMessage(error.response.data.message)
         }
     }
 
@@ -373,7 +353,7 @@ const TeacherDashboard = () => {
                                                 </p>
                                             }
                                         </div>
-                                        <button className="text-blue-600 hover:text-blue-700" onClick={handleAcceptInterview}>
+                                        <button className="text-blue-600 hover:text-blue-700" onClick={() => handleAcceptInterview(request.id)}>
                                             Accept
                                         </button>
                                     </div>

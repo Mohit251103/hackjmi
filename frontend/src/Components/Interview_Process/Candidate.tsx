@@ -3,6 +3,7 @@ import NavbarComponent from "../SingleComponents/NavigationBar.tsx"
 import { useEffect, useState } from "react"
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
+import socket from "../../utils/socket.ts";
 
 
 
@@ -10,6 +11,21 @@ const hardcodedSkills = [
     "JavaScript", "React", "Node.js", "Python", "C++",
     "Java", "SQL", "MongoDB", "PostgreSQL", "Docker"
 ];
+
+const Toast = ({ message, open, setMessage, setOpen }:
+    {
+        message: string,
+        open: boolean,
+        setMessage: React.Dispatch<React.SetStateAction<string>>,
+        setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    }) => {
+    return <Snackbar
+        open={open}
+        autoHideDuration={5000}
+        message={message}
+        onClose={() => { setMessage("");  setOpen(false)}}
+    />
+}
 
 const SkillPopup = ({ user }: { user: any }) => {
 
@@ -69,6 +85,8 @@ const Candidate = () => {
     const [user, setUser] = useState<any>({});
     const [openPopUp, setOpenPopUp] = useState<boolean>(false);
     const router = useNavigate();
+    const [message, setMessage] = useState<string>("");
+    const [open, setOpen] = useState<boolean>(false);
 
     const checkAuth = async () => {
         try {
@@ -86,10 +104,16 @@ const Candidate = () => {
 
     useEffect(() => {
         checkAuth();
+        socket.on("meet-link", ({ link }) => {
+            setMessage("Found Interviewer");
+            setOpen(true);
+            
+        })
     }, [])
 
     return (
         <div className="flex-col justify-center items-center">
+            <Toast message={message} open={open} setMessage={setMessage} setOpen={setOpen} />
             <NavbarComponent />
             {openPopUp &&
                 <SkillPopup user={user} />
