@@ -2,8 +2,8 @@ import { Button } from "@mui/material"
 import NavbarComponent from "../SingleComponents/NavigationBar.tsx"
 import { useEffect, useState } from "react"
 import axiosInstance from "../../utils/axiosInstance";
-import { Navigate, useNavigate } from "react-router-dom";
-import socket from "../../utils/socket";
+import {  useNavigate } from "react-router-dom";
+
 
 const hardcodedSkills = [
     "JavaScript", "React", "Node.js", "Python", "C++",
@@ -12,10 +12,10 @@ const hardcodedSkills = [
 
 const SkillPopup = ({user}:{user:any}) => {
 
-    const [skills, setSkills] = useState<String[]>([]);
+    const [skills, setSkills] = useState<string[]>([]);
     const [dropdown, setDropdown] = useState<boolean>(false);
 
-    const handleAddSkill = (skill: String) => {
+    const handleAddSkill = (skill: string) => {
         if (skills.includes(skill)) {
             return;
         }
