@@ -3,7 +3,6 @@ import passport from "passport";
 import session from "express-session";
 import cors from "cors";
 import dotenv from "dotenv";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { PrismaClient } from "@prisma/client";
 import cookieParser from "cookie-parser";
 import CandidateHandler from "./services/candidate"
@@ -11,6 +10,7 @@ import InterviewerHandler from "./services/interviewer"
 import http from 'http'
 import "./utils/socketConf"
 import { Server } from "socket.io";
+import passport_conf from "./utils/authConf"
 
 dotenv.config();
 
@@ -20,16 +20,14 @@ const PORT = 3000;
 const prisma = new PrismaClient();
 let onlineInterviewers: { [key: string]: string } = {}
 
-// socket io
 const io = new Server(server, {
     cors: {
-        origin: process.env.VITE_API_URL,  // Change to your frontend URL
+        origin: process.env.VITE_API_URL, 
         methods: ["GET", "POST"],
-        credentials: true // Allow cookies & authentication
+        credentials: true
     }
 });
 
-// Middleware
 app.use(cookieParser());
 app.use(cors({ origin: process.env.VITE_API_URL, credentials: true }));
 app.use(express.json());
@@ -46,46 +44,29 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Google OAuth Strategy
-passport.use(
-    new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID as string,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-            callbackURL: "/auth/google/callback",
-            scope: ["profile", "email", "https://www.googleapis.com/auth/calendar.events","https://www.googleapis.com/auth/calendar.events.owned"]
-        },
-        (accessToken, refreshToken, profile, done) => {
-            return done(null, {...profile, accessToken});
-        }
-    )
-);
+passport_conf(); // configuring google passport strategy
 
-// Serialize and Deserialize User
-passport.serializeUser((user: Express.User, done) => {
-    done(null, user);
-});
-
-passport.deserializeUser((obj: any, done) => {
-    done(null, obj);
-});
-
-// Google Auth Routes
 app.get(
     "/auth/google",
     (req, res, next) => {
         const isInterviewer = req.query.isInterviewer === "true";
 
-        // Set an HTTP-only cookie to store isInterviewer
         res.cookie("isInterviewer", isInterviewer, {
-            httpOnly: true, // Prevent frontend access
-            secure: process.env.NODE_ENV === "production", // Enable secure in production
+            httpOnly: true, 
+            secure: process.env.NODE_ENV === "production", 
             maxAge: 5 * 60 * 1000,
             sameSite: "lax",
         });
         next();
     },
-    passport.authenticate("google", { scope: ["profile", "email", "https://www.googleapis.com/auth/calendar.events","https://www.googleapis.com/auth/calendar.events.owned"] })
+    passport.authenticate("google", {
+        scope: [
+            "profile",
+            "email",
+            "https://www.googleapis.com/auth/calendar.events",
+            "https://www.googleapis.com/auth/calendar.events.owned"
+            ]
+    })
 );
 
 app.get(
@@ -126,7 +107,7 @@ app.get(
         }
 
         if (isInterviewer) {
-            res.redirect(`${process.env.VITE_API_URL}/home`);
+            res.redirect(`${process.env.VITE_API_URL}/home/2`);
         }
         else {
             res.redirect(`${process.env.VITE_API_URL}/home`);
@@ -134,7 +115,6 @@ app.get(
     }
 );
 
-// Logout Route
 app.get("/logout", (req, res) => {
     req.logout(() => {
         res.redirect(process.env.VITE_API_URL as string);
@@ -170,7 +150,6 @@ app.get("/user", async (req, res) => {
 app.use("/candidate", CandidateHandler)
 app.use("/interviewer", InterviewerHandler)
 
-// Start Server
 server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
