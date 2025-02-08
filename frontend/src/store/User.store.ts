@@ -6,6 +6,7 @@ interface UserDetails {
     email:string
     image:string
     isInterviewer:boolean
+    isAuth: boolean
 }
 interface UserState{
     user:UserDetails|null
