@@ -1,9 +1,10 @@
 import { Button, Snackbar } from "@mui/material"
 import NavbarComponent from "../SingleComponents/NavigationBar.tsx"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import socket from "../../utils/socket.ts";
+import { Copy, LoaderCircle, X } from "lucide-react";
 
 
 
@@ -27,7 +28,12 @@ const Toast = ({ message, open, setMessage, setOpen }:
     />
 }
 
-const SkillPopup = ({ user }: { user: any }) => {
+const SkillPopup = ({ user, setPopup, setLoading }:
+    {
+        user: any,
+        setPopup: React.Dispatch<React.SetStateAction<boolean>>,
+        setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    }) => {
 
     const [skills, setSkills] = useState<string[]>([]);
     const [dropdown, setDropdown] = useState<boolean>(false);
@@ -50,6 +56,8 @@ const SkillPopup = ({ user }: { user: any }) => {
     const handleStart = async () => {
         const res = await axiosInstance.post("/candidate/start-interview", { userId: user.id, skills: skills });
         console.log(res);
+        setPopup(false);
+        setLoading(true);
     }
 
     return (
@@ -87,6 +95,9 @@ const Candidate = () => {
     const router = useNavigate();
     const [message, setMessage] = useState<string>("");
     const [open, setOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [showMeet, setShowMeet] = useState<boolean>(false);
+    const [link, setLink] = useState<string>("");
 
     const checkAuth = async () => {
         try {
@@ -102,21 +113,46 @@ const Candidate = () => {
         setOpenPopUp(prev => !prev);
     }
 
+    const handleCopy = () => {
+        navigator.clipboard.writeText(link).then(() => {
+            setMessage("Copied !!")
+            setOpen(true);
+        }).catch(err => {
+            console.error("Failed to copy: ", err);
+        });
+    }
+
     useEffect(() => {
         checkAuth();
         socket.on("meet-link", ({ link }) => {
+            setLink(link);
             setMessage("Found Interviewer");
             setOpen(true);
-            
+            setLoading(false);
+            setShowMeet(true);
         })
     }, [])
 
     return (
         <div className="flex-col justify-center items-center">
             <Toast message={message} open={open} setMessage={setMessage} setOpen={setOpen} />
+            {loading && 
+                <div className="z-50 absolute top-0 left-0 h-[100vh] w-[100vw] bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center">
+                    <LoaderCircle className="animate-spin h-5 w-5"/>
+                </div>
+            }
+            {showMeet && 
+                <div className="absolute top-0 right-0 h-[100vh] w-[100vw] bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center">
+                    <div className="absolute top-0 right-2"><X color="white" onClick={()=> setShowMeet(false)}/></div>
+                    <div className="w-[40%] h-[30%] p-3 rounded-md flex flex-col items-center justify-center">
+                        <input type="text" value={link} />
+                        <Button onClick={handleCopy}><Copy />{" "}Copy</Button>
+                    </div>
+                </div>
+            }
             <NavbarComponent />
             {openPopUp &&
-                <SkillPopup user={user} />
+                <SkillPopup user={user} setPopup={setOpenPopUp} setLoading={setLoading} />
             }
             <Button variant="outlined" onClick={handleClick}>
                 Ready to take interview
