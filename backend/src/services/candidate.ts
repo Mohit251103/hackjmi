@@ -37,7 +37,6 @@ router.post("/start-interview", async (req, res) => {
             return;
         }
 
-        // console.log(JSON.stringify(skills))
         let present = false;
         for (let interviewer of interviewers){
             if (onlineInterviewers[interviewer.id]) {

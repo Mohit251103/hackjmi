@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Snackbar } from "@mui/material";
 import NavbarComponent from "../SingleComponents/NavigationBar.tsx";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
@@ -17,6 +17,30 @@ const hardcodedSkills = [
   "PostgreSQL",
   "Docker",
 ];
+
+const Toast = ({
+  message,
+  open,
+  setMessage,
+  setOpen,
+}: {
+  message: string;
+  open: boolean;
+  setMessage: React.Dispatch<React.SetStateAction<string>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  return (
+    <Snackbar
+      open={open}
+      autoHideDuration={5000}
+      message={message}
+      onClose={() => {
+        setMessage("");
+        setOpen(false);
+      }}
+    />
+  );
+};
 
 const SkillPopup = ({ user }: { user: any }) => {
   const [skills, setSkills] = useState<string[]>([]);
@@ -68,7 +92,7 @@ const SkillPopup = ({ user }: { user: any }) => {
             Select skills v
           </button>
           {dropdown && (
-            <div className="w-full border flex-col gap-2 w-[30%] h-[25%] overflow-auto justify-center items-center absolute bg-white mt-1 z-40">
+            <div className="w-full border flex-col gap-2 h-[25%] overflow-auto justify-center items-center absolute bg-white mt-1 z-40">
               {hardcodedSkills.map((skill, idx) => {
                 return (
                   <button

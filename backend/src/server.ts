@@ -23,7 +23,7 @@ let onlineInterviewers: { [key: string]: string } = {}
 // socket io
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",  // Change to your frontend URL
+        origin: process.env.VITE_API_URL,  // Change to your frontend URL
         methods: ["GET", "POST"],
         credentials: true // Allow cookies & authentication
     }
@@ -31,11 +31,11 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: process.env.VITE_API_URL, credentials: true }));
 app.use(express.json());
 app.use(
     session({
-        secret: "hackjmi",
+        secret: process.env.SECRET as string,
         resave: false,
         saveUninitialized: true,
         cookie: {
@@ -53,9 +53,10 @@ passport.use(
             clientID: process.env.GOOGLE_CLIENT_ID as string,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
             callbackURL: "/auth/google/callback",
+            scope: ["profile", "email", "https://www.googleapis.com/auth/calendar.events"]
         },
         (accessToken, refreshToken, profile, done) => {
-            return done(null, profile);
+            return done(null, {...profile, accessToken});
         }
     )
 );
@@ -89,7 +90,7 @@ app.get(
 
 app.get(
     "/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "http://localhost:5173" }),
+    passport.authenticate("google", { failureRedirect: process.env.VITE_API_URL }),
     async (req, res) => {
         const body = req.body;
         const req_user: any = req.user;
@@ -125,10 +126,10 @@ app.get(
         }
 
         if (isInterviewer) {
-            res.redirect("http://localhost:5173/home/2");
+            res.redirect(`${process.env.VITE_API_URL}/home/2`);
         }
         else {
-            res.redirect("http://localhost:5173/home");
+            res.redirect(`${process.env.VITE_API_URL}/home`);
         }
     }
 );
@@ -136,7 +137,7 @@ app.get(
 // Logout Route
 app.get("/logout", (req, res) => {
     req.logout(() => {
-        res.redirect("http://localhost:5173");
+        res.redirect(process.env.VITE_API_URL as string);
     });
 });
 
