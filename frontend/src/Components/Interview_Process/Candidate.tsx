@@ -117,6 +117,8 @@ const Candidate = () => {
   const [user, setUser] = useState<any>({});
   const [openPopUp, setOpenPopUp] = useState<boolean>(false);
   const router = useNavigate();
+  const [message, setMessage] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
 
   const checkAuth = async () => {
     try {
@@ -134,10 +136,20 @@ const Candidate = () => {
 
   useEffect(() => {
     checkAuth();
+    socket.on("meet-link", ({ link }) => {
+      setMessage("Found Interviewer");
+      setOpen(true);
+    });
   }, []);
 
   return (
     <div className="flex-col justify-center items-center">
+      <Toast
+        message={message}
+        open={open}
+        setMessage={setMessage}
+        setOpen={setOpen}
+      />
       <NavbarComponent />
       {openPopUp && <SkillPopup user={user} />}
       <Button variant="outlined" onClick={handleClick}>

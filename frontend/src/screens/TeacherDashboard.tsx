@@ -1,4 +1,4 @@
-import { Bell, PlusCircle, Users2, X } from "lucide-react";
+import { Bell, Copy, LoaderCircle, PlusCircle, Users2, X } from "lucide-react";
 import { useUserStore } from "../store/User.store";
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from "react";
@@ -14,7 +14,7 @@ interface ChipsArrayProps {
     setChipData: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-interface InterviewRequest{
+interface InterviewRequest {
     interviewerId: string | null;
     id: string;
     userId: string;
@@ -126,7 +126,7 @@ const Toast = ({ message, open, setMessage, setOpen }:
         open={open}
         autoHideDuration={5000}
         message={message}
-        onClose={() => { setMessage("");  setOpen(false)}}
+        onClose={() => { setMessage(""); setOpen(false) }}
     />
 }
 
@@ -137,6 +137,9 @@ const TeacherDashboard = () => {
     const [open, setOpen] = useState<boolean>(false);
     const [message, setMessage] = useState<string>("");
     const [requests, setRequests] = useState<InterviewRequest[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [showMeet, setShowMeet] = useState<boolean>(false);
+    const [link, setLink] = useState<string>("");
 
     const interviewer = {
         name: "Dr. John Smith",
@@ -158,7 +161,7 @@ const TeacherDashboard = () => {
 
     const handleServerAdd = async () => {
         try {
-            const res = await axiosInstance.post("/interviewer/add-skills", { userId:user?.id, skills });
+            const res = await axiosInstance.post("/interviewer/add-skills", { userId: user?.id, skills });
             console.log(res);
             setMessage(res.data.message);
             setOpen(true);
@@ -168,15 +171,31 @@ const TeacherDashboard = () => {
         }
     }
 
+    const handleCopy = () => {
+        navigator.clipboard.writeText(link).then(() => {
+            setMessage("Copied !!")
+            setOpen(true);
+        }).catch(err => {
+            console.error("Failed to copy: ", err);
+        });
+    }
+
     const handleAcceptInterview = async (requestId: string) => {
+        setLoading(true);
         try {
             const res = await axiosInstance.post("/interviewer/accept-request", { requestId, userId: user?.id })
+            console.log(res.data.message)
             setMessage(res.data.message);
             setOpen(true);
             const meet_res = await axiosInstance.get("/interviewer/generate-meet");
             console.log(meet_res.data.link);
-        } catch (error : any) {
+            setLink(meet_res.data.link);
+            setShowMeet(true);
+        } catch (error: any) {
             setMessage(error.response.data.message)
+        }
+        finally {
+            setLoading(false);
         }
     }
 
@@ -189,11 +208,11 @@ const TeacherDashboard = () => {
             console.log(mssg);
         })
 
-        socket.on("interview_request", (request: InterviewRequest) => { 
+        socket.on("interview_request", (request: InterviewRequest) => {
             setRequests((prev) => [...prev, request]);
         });
 
-        socket.on("remove_request", ({requestId}) => {
+        socket.on("remove_request", ({ requestId }) => {
             setRequests((prev) => prev.filter((r) => r.id !== requestId));
         });
 
@@ -208,13 +227,27 @@ const TeacherDashboard = () => {
 
     return (
         <div className="mt-12 flex overflow-hidden flex-wrap justify-center gap-4">
-            {open && <Toast message={message} open={open} setMessage={setMessage} setOpen={setOpen}/>}
+            {open && <Toast message={message} open={open} setMessage={setMessage} setOpen={setOpen} />}
             {/* dropdown to select skills */}
+            {loading &&
+                <div className="z-50 absolute top-0 left-0 h-[100vh] w-[100vw] bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center">
+                    <LoaderCircle className="animate-spin h-5 w-5" />
+                </div>
+            }
+            {showMeet &&
+                <div className="absolute top-0 right-0 h-[100vh] w-[100vw] bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center">
+                    <div className="absolute top-0 right-2"><X color="white" onClick={() => setShowMeet(false)} /></div>
+                    <div className="w-[40%] h-[30%] p-3 rounded-md flex flex-col items-center justify-center">
+                        <input type="text" value={link} />
+                        <Button onClick={handleCopy}><Copy />{" "}Copy</Button>
+                    </div>
+                </div>
+            }
             {dropdown &&
                 <div className="h-full w-full bg-black bg-opacity-70 backdrop-blur-sm flex flex-col justify-center items-center absolute top-0 left-0">
-                    <div className="absolute top-0 right-1 hover:bg-opacity-70 bg-opacity-90 rounded-full p-2" onClick={()=>{setDropDown(false)}}><X color="white"/></div>
+                    <div className="absolute top-0 right-1 hover:bg-opacity-70 bg-opacity-90 rounded-full p-2" onClick={() => { setDropDown(false) }}><X color="white" /></div>
                     <Box sx={{ width: '50%' }} className={'flex flex-col'}>
-                        <ChipsArray chipData={skills} setChipData={setSkills}/>
+                        <ChipsArray chipData={skills} setChipData={setSkills} />
                         <Paper
                             sx={{
                                 display: 'flex',
@@ -322,7 +355,7 @@ const TeacherDashboard = () => {
                     <div className="w-[30%] h-[60%] bg-white rounded-xl shadow-sm p-6 overflow-auto">
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-lg font-semibold">Interview Requests</h3>
-                            {requests.length!==0 && <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
+                            {requests.length !== 0 && <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm">
                                 {requests.length} New
                             </span>}
                         </div>

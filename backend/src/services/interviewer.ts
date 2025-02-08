@@ -44,11 +44,12 @@ router.post("/accept-request", async (req, res) => {
             data: { interviewerId, status: "accepted" }
         });
 
-        io.emit("remove_request", { requestId }); // to be done
+        io.emit("remove_request", { requestId });
 
         res.status(200).json({ success: true, message: "Interview accepted!" });
 
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: "Internal server error" });
     }
 })
@@ -134,8 +135,9 @@ router.get("/generate-meet", async (req, res) => {
         const link = response.data.hangoutLink;
         io.emit("meet_link", { link });
         res.status(200).json({ link });
-        
+
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: "Internal server error" });
     }
 })

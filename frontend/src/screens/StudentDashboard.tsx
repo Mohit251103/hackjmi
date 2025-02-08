@@ -3,25 +3,23 @@ import {Typography, Box, Container,Button} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
+import SelectSkills from "../Components/dialog/selecteSkills.tsx";
 
-interface ChipData {
-    key: number;
-    label: string;
-}
 
 const ListItem = styled('li')(({theme}) => ({
     margin: theme.spacing(0.5),
 }));
 interface ChipsArrayProps {
-    chipData: ChipData[];
-    setChipData: React.Dispatch<React.SetStateAction<ChipData[]>>;
+    chipData: string[]
+    setChipData: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const ChipsArray:React.FC<ChipsArrayProps>=({chipData,setChipData})=> {
 
 
-    const handleDelete = (chipToDelete: ChipData) => () => {
-        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    const handleDelete = (index:number) => () => {
+          const newArray=chipData.filter((_,i)=>i!==index);
+            setChipData(newArray);
     };
 
     return (
@@ -36,13 +34,13 @@ const ChipsArray:React.FC<ChipsArrayProps>=({chipData,setChipData})=> {
             }}
             component="ul"
         >
-            {chipData.map((data) => {
+            {chipData.map((data,index) => {
 
                 return (
-                    <ListItem key={data.key}>
+                    <ListItem key={data}>
                         <Chip
-                            label={data.label}
-                            onDelete={handleDelete(data)}
+                            label={data}
+                            onDelete={handleDelete(index)}
                         />
                     </ListItem>
                 );
@@ -59,63 +57,12 @@ const StudentDashboard: React.FC = () => {
         "https://www.gstatic.com/meet/user_edu_safety_light_e04a2bbb449524ef7e49ea36d5f25b65.svg",
         "https://images.pexels.com/photos/6953843/pexels-photo-6953843.jpeg",
     ];
-    const rawskills = [
-        { key: 0, label: 'Angular' },
-        { key: 1, label: 'jQuery' },
-        { key: 2, label: 'Polymer' },
-        { key: 3, label: 'React' },
-        { key: 4, label: 'Vue.js' },
-        { key: 5, label: 'Svelte' },
-        { key: 6, label: 'Next.js' },
-        { key: 7, label: 'Nuxt.js' },
-        { key: 8, label: 'Redux' },
-        { key: 9, label: 'Zustand' },
-        { key: 10, label: 'TypeScript' },
-        { key: 11, label: 'Node.js' },
-        { key: 12, label: 'Express.js' },
-        { key: 13, label: 'NestJS' },
-        { key: 14, label: 'GraphQL' },
-        { key: 15, label: 'REST API' },
-        { key: 16, label: 'MongoDB' },
-        { key: 17, label: 'PostgreSQL' },
-        { key: 18, label: 'Firebase' },
-        { key: 19, label: 'Supabase' },
-        { key: 20, label: 'Tailwind CSS' },
-        { key: 21, label: 'Bootstrap' },
-        { key: 22, label: 'Material UI' },
-        { key: 23, label: 'Chakra UI' },
-        { key: 24, label: 'Three.js' },
-        { key: 25, label: 'WebRTC' },
-        { key: 26, label: 'Socket.io' },
-        { key: 27, label: 'D3.js' },
-        { key: 28, label: 'Electron.js' },
-        { key: 29, label: 'Docker' },
-        { key: 30, label: 'Kubernetes' },
-        { key: 31, label: 'Terraform' },
-        { key: 32, label: 'AWS' },
-        { key: 33, label: 'Azure' },
-        { key: 34, label: 'Google Cloud' },
-        { key: 35, label: 'Python' },
-        { key: 36, label: 'Django' },
-        { key: 37, label: 'Flask' },
-        { key: 38, label: 'FastAPI' },
-        { key: 39, label: 'Machine Learning' },
-        { key: 40, label: 'AI/Deep Learning' },
-        { key: 41, label: 'Blockchain' },
-        { key: 42, label: 'Web3.js' },
-        { key: 43, label: 'Solidity' },
-        { key: 44, label: 'Cybersecurity' },
-        { key: 45, label: 'CI/CD' },
-        { key: 46, label: 'Jenkins' },
-        { key: 47, label: 'GitHub Actions' },
-        { key: 48, label: 'Redux Toolkit' },
-        { key: 49, label: 'Vite' }
-    ];
 
 
     const [image, setImage] = useState<number>(0);
+    const [open, setOpen] = useState<boolean>(false);
 
-    const [skills, setSkills] = useState<ChipData[]>([]);
+    const [skills, setSkills] = useState<string[]>([]);
 
 
     useEffect(() => {
@@ -131,6 +78,7 @@ const StudentDashboard: React.FC = () => {
     }, [image]);
 
     return (
+        <>
         <Container className="flex">
             <Box sx={{
                 display: 'flex',
@@ -150,7 +98,7 @@ const StudentDashboard: React.FC = () => {
 
                     <ChipsArray chipData={skills} setChipData={setSkills}/>
 
-                    <Button variant="contained" color="primary"  >Join</Button>
+                    <Button variant="contained" color="primary" onClick={()=>{setOpen(true)}}>Join</Button>
 
                     <Paper
                         sx={{
@@ -163,19 +111,7 @@ const StudentDashboard: React.FC = () => {
                         }}
                         component="div"
                     >
-                        {rawskills.map((data) => {
 
-                            return (
-                                <ListItem key={data.key}>
-                                    <Chip
-                                        label={data.label}
-                                        onClick={() => {
-                                            setSkills((chips) => chips.concat(data));
-                                        }}
-                                    />
-                                </ListItem>
-                            );
-                        })}
 
                     </Paper>
 
@@ -199,6 +135,8 @@ const StudentDashboard: React.FC = () => {
             </Box>
 
         </Container>
+        <SelectSkills dialogState={open} setDialogState={setOpen}/>
+        </>
     );
 };
 
