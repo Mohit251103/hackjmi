@@ -124,7 +124,7 @@ const Candidate = () => {
 
     useEffect(() => {
         checkAuth();
-        socket.on("meet-link", ({ link }) => {
+        socket.on("meet_link", ({ link }) => {
             setLink(link);
             setMessage("Found Interviewer");
             setOpen(true);
