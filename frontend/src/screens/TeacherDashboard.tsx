@@ -1,16 +1,10 @@
-import { Bell, Calendar, MessageSquare, PlusCircle, Users2, X } from "lucide-react";
-// import { useEffect, useState } from "react";
+import { Bell, PlusCircle, Users2, X } from "lucide-react";
 import { useUserStore } from "../store/User.store";
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from "react";
 import { Box, Button, Chip, Paper, Snackbar } from "@mui/material";
 import axiosInstance from "../utils/axiosInstance";
 import socket from "../utils/socket";
-
-interface ChipData {
-    key: number;
-    label: string;
-}
 
 const ListItem = styled('li')(({ theme }) => ({
     margin: theme.spacing(0.5),
