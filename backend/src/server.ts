@@ -10,6 +10,7 @@ import CandidateHandler from "./services/candidate"
 import InterviewerHandler from "./services/interviewer"
 import http from 'http'
 import "./utils/socketConf"
+import { Server } from "socket.io";
 
 dotenv.config();
 
@@ -17,6 +18,16 @@ const app = express();
 const server = http.createServer(app);
 const PORT = 3000;
 const prisma = new PrismaClient();
+let onlineInterviewers: { [key: string]: string } = {}
+
+// socket io
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:5173",  // Change to your frontend URL
+        methods: ["GET", "POST"],
+        credentials: true // Allow cookies & authentication
+    }
+});
 
 // Middleware
 app.use(cookieParser());
@@ -54,7 +65,7 @@ passport.serializeUser((user: Express.User, done) => {
     done(null, user);
 });
 
-passport.deserializeUser((obj : any, done) => {
+passport.deserializeUser((obj: any, done) => {
     done(null, obj);
 });
 
@@ -112,7 +123,7 @@ app.get(
                 })
             }
         }
-        
+
         if (isInterviewer) {
             res.redirect("http://localhost:5173/home/2");
         }
@@ -163,4 +174,30 @@ server.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
 
-export default server;
+io.on('connection', (socket) => {
+    console.log(`Socket ${socket.id} connected`);
+
+    socket.on("join_as_interviewer", async (userId: string) => {
+        onlineInterviewers[userId] = socket.id;
+        console.log(`Interviewer ${userId} connected`);
+    });
+
+    socket.on("join_room", () => {
+        socket.join(socket.id);
+        console.log(`${socket.id} joined ${socket.id}`);
+        io.to(socket.id).emit('joined_room', `${socket.id} joined ${socket.id}`);
+    })
+
+    socket.on("disconnect", () => {
+        console.log(`User disconnected: ${socket.id}`);
+        for (const userId in onlineInterviewers) {
+            if (onlineInterviewers[userId] === socket.id) {
+                delete onlineInterviewers[userId];
+                break;
+            }
+        }
+    });
+});
+
+export {onlineInterviewers}
+export default io;

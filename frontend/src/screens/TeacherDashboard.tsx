@@ -209,17 +209,23 @@ const TeacherDashboard = () => {
     useEffect(() => {
 
         socket.emit("join_as_interviewer", user?.id);
+        socket.emit("join_room")
 
-        socket.on("interview_request", (request: InterviewRequest) => {
+        socket.on('joined_room', (mssg) => {
+            console.log(mssg);
+        })
+
+        socket.on("interview_request", (request: InterviewRequest) => { 
             setRequests((prev) => [...prev, request]);
         });
 
-        socket.on("remove_request", (requestId) => {
+        socket.on("remove_request", ({requestId}) => {
             setRequests((prev) => prev.filter((r) => r.id !== requestId));
         });
 
         return () => {
-            socket.disconnect();
+            socket.off("join_room")
+            socket.off('joined_room')
             socket.off("interview_request");
             socket.off("remove_request");
         };

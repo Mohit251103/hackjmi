@@ -1,10 +1,9 @@
 import { io } from "socket.io-client";
 
-const socket = io("ws://localhost:3000", {
+const socket = io("http://localhost:3000", {
+    transports: ["websocket"],
     withCredentials: true, // If using cookies for auth
 });
-
-socket.connect();
 
 socket.on("connect", () => {
     console.log(`✅ Connected to server: ${socket.id}`);

@@ -1,14 +1,13 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
-import io from "../utils/socketConf";
-import {onlineInterviewers} from "./interviewer"
+import io from "../server";
+import {onlineInterviewers} from "../server"
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 router.post("/start-interview", async (req, res) => {
     try {
-        console.log("online interviewers: ",onlineInterviewers)
         const { userId, skills } = req.body;
         const user = await prisma.user.findUnique({
             where: {
@@ -32,18 +31,18 @@ router.post("/start-interview", async (req, res) => {
                 }
             }
         });
-        console.log("matched skills: ", interviewers)
         
         if (interviewers.length === 0) {
             res.status(404).json({ message: "Interviewers not available" });
             return;
         }
 
+        // console.log(JSON.stringify(skills))
         let present = false;
         for (let interviewer of interviewers){
             if (onlineInterviewers[interviewer.id]) {
                 present = true;
-                io.to(onlineInterviewers[interviewer.id]).emit('interview-request', {...request, name: user?.name, image: user?.image});
+                io.to(onlineInterviewers[interviewer.id]).emit('interview_request', { ...request, name: user?.name, image: user?.image });
             }
         }
         if (!present) {
