@@ -1,16 +1,10 @@
-import { Bell, Calendar, MessageSquare, PlusCircle, Users2, X } from "lucide-react";
-// import { useEffect, useState } from "react";
+import { Bell, PlusCircle, Users2, X } from "lucide-react";
 import { useUserStore } from "../store/User.store";
 import { styled } from '@mui/material/styles';
 import React, { useEffect, useState } from "react";
 import { Box, Button, Chip, Paper, Snackbar } from "@mui/material";
 import axiosInstance from "../utils/axiosInstance";
 import socket from "../utils/socket";
-
-interface ChipData {
-    key: number;
-    label: string;
-}
 
 const ListItem = styled('li')(({ theme }) => ({
     margin: theme.spacing(0.5),
@@ -144,29 +138,29 @@ const TeacherDashboard = () => {
     const [message, setMessage] = useState<string>("");
     const [requests, setRequests] = useState<InterviewRequest[]>([]);
 
-    const notifications = [
-        {
-            id: 1,
-            candidate: "Sarah Wilson",
-            role: "Frontend Developer",
-            time: "10 minutes ago",
-            status: "pending",
-        },
-        {
-            id: 2,
-            candidate: "Michael Chen",
-            role: "Full Stack Developer",
-            time: "1 hour ago",
-            status: "pending",
-        },
-        {
-            id: 3,
-            candidate: "Emma Thompson",
-            role: "UI/UX Designer",
-            time: "2 hours ago",
-            status: "pending",
-        },
-    ];
+    // const notifications = [
+    //     {
+    //         id: 1,
+    //         candidate: "Sarah Wilson",
+    //         role: "Frontend Developer",
+    //         time: "10 minutes ago",
+    //         status: "pending",
+    //     },
+    //     {
+    //         id: 2,
+    //         candidate: "Michael Chen",
+    //         role: "Full Stack Developer",
+    //         time: "1 hour ago",
+    //         status: "pending",
+    //     },
+    //     {
+    //         id: 3,
+    //         candidate: "Emma Thompson",
+    //         role: "UI/UX Designer",
+    //         time: "2 hours ago",
+    //         status: "pending",
+    //     },
+    // ];
 
     const interviewer = {
         name: "Dr. John Smith",
@@ -198,13 +192,13 @@ const TeacherDashboard = () => {
         }
     }
 
-    const handleAcceptInterview = () => {
-        try {
-            
-        } catch (error) {
-            
-        }
-    }
+    // const handleAcceptInterview = () => {
+    //     try {
+    //
+    //     } catch (error) {
+    //
+    //     }
+    // }
 
     useEffect(() => {
 
@@ -373,7 +367,7 @@ const TeacherDashboard = () => {
                                                 </p>
                                             }
                                         </div>
-                                        <button className="text-blue-600 hover:text-blue-700" onClick={handleAcceptInterview}>
+                                        <button className="text-blue-600 hover:text-blue-700">
                                             Accept
                                         </button>
                                     </div>
