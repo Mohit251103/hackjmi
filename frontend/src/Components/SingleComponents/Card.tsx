@@ -1,36 +1,54 @@
-import React from "react";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import {Interview} from "../NotificationRoute/Interview.tsx";
 
-const SheetCard: React.FC = () => {
 
+const  BottomActionsCard=({data}:{data:Interview})=> {
     return (
-        <Card sx={{ maxWidth: 345, minWidth: 280 }}>
-            <CardMedia
-                sx={{ height: 140 }}
-                image="./images/Cards/code1.jpg"
-                title="green iguana"
-            />
+        <Card
+            variant="outlined"
+            sx={{
+
+                overflow: 'auto',
+                resize: 'horizontal',
+                display:'flex'
+            }}
+        >
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding:'20px',
+                }}
+            >
+                <Avatar src="/static/images/avatar/1.jpg" />
+            </Box>
             <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                   I am The Here
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    System Hang
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    Created At : {Date.now().toString()}
+                <Typography variant="h3"> {data.name}</Typography>
+                <Typography variant="body1">
+                    {data.name}
                 </Typography>
             </CardContent>
-            <CardActions>
-                <Button> Request Interview </Button>
+            <CardActions sx={{flex:'1'}}>
+                <IconButton color="primary" sx={{ mr: 'auto' }}>
+                    <FavoriteBorder />
+                </IconButton>
+                <Button variant="outlined" color="primary">
+                    {data.status}
+                </Button>
+                <Button variant="contained" color="primary">
+                    Join
+                </Button>
             </CardActions>
         </Card>
     );
-};
-
-export default SheetCard;
+}
+export default BottomActionsCard;

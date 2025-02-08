@@ -7,10 +7,13 @@ import ProfilePage from "./Components/SingleComponents/ProfilePage.tsx";
 import StudentDashboard from "./screens/StudentDashboard.tsx";
 import NotificationCard from "./Components/SingleComponents/NotificationCard.tsx";
 import ProtectedComponent from "./Components/SingleComponents/ProtectiveComponent.tsx";
+import InterviewRoute from "./Components/NotificationRoute/Interview.tsx";
+import PageNotFound from "./Components/SingleComponents/PageNotFound.tsx";
 import {useUserStore} from "./store/User.store.ts";
 
 function App() {
-    const user = useUserStore((state:any) => state.user);
+    const user = useUserStore((state) => state.user);
+
     return (
         <BrowserRouter>
             <Routes>
@@ -19,6 +22,7 @@ function App() {
                     <Route index element={<StudentDashboard/>}/>
                     <Route path="2" element={<TeacherDashboard/>}/>
                     <Route path="profile" element={<ProfilePage/>}/>
+                    <Route path="interview" element={<InterviewRoute/>}/>
                     <Route
                         path="notification"
                         element={
@@ -30,8 +34,7 @@ function App() {
                         }
                     />
                 </Route>
-                <Route path="interview" element={<h1>Interview</h1>}/>
-                <Route path="*" element={<h1>Not Found</h1>}/>
+                <Route path="*" element={<PageNotFound/>}/>
             </Routes>
         </BrowserRouter>
     );
