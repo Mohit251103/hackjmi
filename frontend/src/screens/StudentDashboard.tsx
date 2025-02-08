@@ -8,7 +8,6 @@ const StudentDashboard: React.FC = () => {
     const imageURLs = [
         "https://files.iamvector.com/assets/img/about-img.svg",
         "https://www.gstatic.com/meet/user_edu_safety_light_e04a2bbb449524ef7e49ea36d5f25b65.svg",
-        "https://images.pexels.com/photos/6953843/pexels-photo-6953843.jpeg",
     ];
 
 
@@ -22,7 +21,7 @@ const StudentDashboard: React.FC = () => {
 
         const intervals = setTimeout(() => {
 
-            setImage((image + 1) % 3);
+            setImage((image + 1) % 2);
         }, 10000);
 
         return () => {
@@ -43,7 +42,7 @@ const StudentDashboard: React.FC = () => {
                     py: 4
                 }}>
                     <Box sx={{width: '50%'}} className={'flex flex-col'}>
-                        <Typography variant="h3" className="font-PassionOne capitalize font-extrabold" gutterBottom>
+                        <Typography variant="h3" fontWeight="bold" gutterBottom>
                             One Click Interview
                         </Typography>
                         <Typography variant="body1" gutterBottom>
