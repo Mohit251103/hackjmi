@@ -88,7 +88,7 @@ const StudentDashboard: React.FC = () => {
                 </Box>
 
             </Container>
-            <SelectSkills dialogState={open} setDialogState={setOpen} />
+            <SelectSkills dialogState={open} setDialogState={setOpen} isInterviewer={false} />
         </>
     );
 };

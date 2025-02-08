@@ -25,8 +25,11 @@ const MeetingLinkDialog: React.FC<SetDetailsDialogProps> = ({ dialogState, setDi
     const handleCopy = () => {
         navigator.clipboard.writeText(link).then(() => {
             enqueueSnackbar('Link Copied', {variant: 'success',autoHideDuration: 3000});
+            setDialogState(false);
         }).catch(err => {
             console.error("Failed to copy: ", err);
+            enqueueSnackbar('Failed to copy link', {variant: 'error',autoHideDuration: 3000});
+            setDialogState(false);
         });
     }
 

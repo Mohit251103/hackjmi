@@ -27,12 +27,13 @@ import {useNavigate} from "react-router-dom";
 interface SetDetailsDialogProps {
     dialogState: boolean
     setDialogState: React.Dispatch<React.SetStateAction<boolean>>
+    isInterviewer: boolean
 }
 const ListItem = styled('li')(({theme}) => ({
     margin: theme.spacing(0.5),
 }));
 
-const SelectSkills: React.FC<SetDetailsDialogProps> = ({ dialogState, setDialogState }) => {
+const SelectSkills: React.FC<SetDetailsDialogProps> = ({ dialogState, setDialogState,isInterviewer }) => {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
     const [totalSkills, setTotalSkills] = React.useState<string[]>([]);
     const [showFullSkills, setShowFullSkills] = React.useState<string[]>(rawskills);
@@ -51,21 +52,43 @@ const SelectSkills: React.FC<SetDetailsDialogProps> = ({ dialogState, setDialogS
 
     const {enqueueSnackbar} = useSnackbar();
 
-    const handleStart = async () => {
+
+    const handleInterviewSkillAdd = async() => {
+
         setIsLoading(true);
-         try {
-             const res = await axiosInstance.post("/candidate/start-interview", {userId: user?.id, skills: totalSkills});
-             console.log(res);
-             enqueueSnackbar('Check Out Interview Tab', {variant: 'error',autoHideDuration: 3000});
-             handleClose();
-             navigate('/home/interview');
+        console.log(user);
+        try {
+            const res = await axiosInstance.post("/interviewer/add-skills", { userId: user?.id, skills:totalSkills });
+            console.log(res);
+            enqueueSnackbar('Skills Added', {variant: 'success', autoHideDuration: 3000});
+            handleClose();
+        } catch (error) {
+            console.log(error);
+            enqueueSnackbar('Failed to Add Skills', {variant: 'error', autoHideDuration: 3000});
+            handleClose();
+        }
+    }
 
-         }catch (error) {
-             console.log(error);
-             enqueueSnackbar('No Interviewer Available', {variant: 'error',autoHideDuration: 3000});
-             handleClose();
+    const handleStart = async () => {
 
-         }
+            setIsLoading(true);
+            try {
+                const res = await axiosInstance.post("/candidate/start-interview", {
+                    userId: user?.id,
+                    skills: totalSkills
+                });
+                console.log(res);
+                enqueueSnackbar('Check Out Interview Tab', {variant: 'success', autoHideDuration: 3000});
+                handleClose();
+                navigate('/home/interview');
+
+            } catch (error) {
+                console.log(error);
+                enqueueSnackbar('No Interviewer Available', {variant: 'error', autoHideDuration: 3000});
+                handleClose();
+
+            }
+
 
     }
 
@@ -213,7 +236,7 @@ const SelectSkills: React.FC<SetDetailsDialogProps> = ({ dialogState, setDialogS
                     Cancel
                 </Button>
                 <LoadingButton
-                    onClick={handleStart}
+                    onClick={isInterviewer?handleInterviewSkillAdd:handleStart}
                     loading={isLoading}
                     loadingPosition='start'
                     startIcon={<Save />}
