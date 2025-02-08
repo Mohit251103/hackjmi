@@ -7,7 +7,6 @@ import StudentDashboard from "./screens/StudentDashboard.tsx";
 import NotificationCard from "./Components/SingleComponents/NotificationCard.tsx";
 import ProtectedComponent from "./Components/SingleComponents/ProtectiveComponent.tsx";
 import { useUserStore } from "./store/User.store.ts";
-import Candidate from "./Components/Interview_Process/Candidate.tsx";
 
 function App() {
   const user = useUserStore((state: { user: any }) => state.user);
@@ -29,7 +28,6 @@ function App() {
           <Route index element={<StudentDashboard />} />
           <Route path="2" element={<TeacherDashboard />} />
           <Route path="profile" element={<ProfilePage />} />
-          <Route path="mohit" element={<Candidate />} />
           <Route
             path="notification"
             element={
