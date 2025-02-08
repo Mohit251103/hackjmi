@@ -56,15 +56,17 @@ const SelectSkills: React.FC<SetDetailsDialogProps> = ({ dialogState, setDialogS
          try {
              const res = await axiosInstance.post("/candidate/start-interview", {userId: user?.id, skills: totalSkills});
              console.log(res);
-             navigate('/home/interview');
+             enqueueSnackbar('Check Out Interview Tab', {variant: 'error',autoHideDuration: 3000});
              handleClose();
+             navigate('/home/interview');
 
          }catch (error) {
              console.log(error);
-             enqueueSnackbar('Cannot Start Interview Write Now', {variant: 'error',autoHideDuration: 3000});
+             enqueueSnackbar('No Interviewer Available', {variant: 'error',autoHideDuration: 3000});
              handleClose();
 
          }
+
     }
 
 

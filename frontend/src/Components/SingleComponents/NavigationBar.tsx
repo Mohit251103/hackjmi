@@ -18,7 +18,7 @@ const NavbarComponent:React.FC = () => {
                     <HomeOutlinedIcon fontSize="small" />
                     <span className="btm-nav-label text-xs sm:text-lg md:text-sm">Home  </span>
                 </NavLink>
-                <NavLink to="/interview" className="flex gap-2 items-center justify-center hover:text-sky-400">
+                <NavLink to="/home/interview" className="flex gap-2 items-center justify-center hover:text-sky-400">
                    <ChecklistOutlinedIcon fontSize="small"/>
                     <span className="btm-nav-label text-xs sm:text-lg md:text-sm">My Interviews </span>
                 </NavLink>

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import socket from "../../utils/socket.ts";
-import { Copy, LoaderCircle, X } from "lucide-react";
+import { LoaderCircle, X } from "lucide-react";
 
 
 
@@ -113,14 +113,7 @@ const Candidate = () => {
         setOpenPopUp(prev => !prev);
     }
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(link).then(() => {
-            setMessage("Copied !!")
-            setOpen(true);
-        }).catch(err => {
-            console.error("Failed to copy: ", err);
-        });
-    }
+
 
     useEffect(() => {
         checkAuth();
@@ -146,7 +139,6 @@ const Candidate = () => {
                     <div className="absolute top-0 right-2"><X color="white" onClick={()=> setShowMeet(false)}/></div>
                     <div className="w-[40%] h-[30%] p-3 rounded-md flex flex-col items-center justify-center">
                         <input type="text" value={link} />
-                        <Button onClick={handleCopy}><Copy />{" "}Copy</Button>
                     </div>
                 </div>
             }
