@@ -14,6 +14,7 @@ import {
     Button,
     DialogActions
 } from '@mui/material'
+import {useSnackbar} from "notistack";
 import { LoadingButton } from '@mui/lab'
 import {styled} from '@mui/material/styles';
 import { Save, People } from '@mui/icons-material'
@@ -21,6 +22,7 @@ import AddIcon from '@mui/icons-material/Add';
 import {rawskills} from "./rawSkills.ts";
 import axiosInstance from "../../utils/axiosInstance.ts";
 import {useUserStore} from "../../store/User.store.ts";
+import {useNavigate} from "react-router-dom";
 
 interface SetDetailsDialogProps {
     dialogState: boolean
@@ -36,23 +38,32 @@ const SelectSkills: React.FC<SetDetailsDialogProps> = ({ dialogState, setDialogS
     const [showFullSkills, setShowFullSkills] = React.useState<string[]>(rawskills);
     const [errorMessage, setErrorMessage] = React.useState<string>('');
     const user = useUserStore(state=>state.user);
+    const navigate = useNavigate();
 
 
     const handleClose = () => {
         setDialogState(false);
         setTotalSkills([]);
         setShowFullSkills(rawskills);
+        setErrorMessage('');
+        setIsLoading(false);
     }
+
+    const {enqueueSnackbar} = useSnackbar();
 
     const handleStart = async () => {
         setIsLoading(true);
          try {
              const res = await axiosInstance.post("/candidate/start-interview", {userId: user?.id, skills: totalSkills});
              console.log(res);
-             setIsLoading(false);
+             navigate('/home/interview');
+             handleClose();
+
          }catch (error) {
              console.log(error);
-             setIsLoading(false);
+             enqueueSnackbar('Cannot Start Interview Write Now', {variant: 'error',autoHideDuration: 3000});
+             handleClose();
+
          }
     }
 
