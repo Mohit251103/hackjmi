@@ -107,7 +107,7 @@ app.get(
         }
 
         if (isInterviewer) {
-            res.redirect(`${process.env.VITE_API_URL}/home/2`);
+            res.redirect(`${process.env.VITE_API_URL}/home`);
         }
         else {
             res.redirect(`${process.env.VITE_API_URL}/home`);
