@@ -36,17 +36,17 @@ exports.onlineInterviewers = onlineInterviewers;
 // socket io
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: "http://localhost:5173", // Change to your frontend URL
+        origin: process.env.VITE_API_URL, // Change to your frontend URL
         methods: ["GET", "POST"],
         credentials: true // Allow cookies & authentication
     }
 });
 // Middleware
 app.use((0, cookie_parser_1.default)());
-app.use((0, cors_1.default)({ origin: "http://localhost:5173", credentials: true }));
+app.use((0, cors_1.default)({ origin: process.env.VITE_API_URL, credentials: true }));
 app.use(express_1.default.json());
 app.use((0, express_session_1.default)({
-    secret: "hackjmi",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -82,7 +82,7 @@ app.get("/auth/google", (req, res, next) => {
     });
     next();
 }, passport_1.default.authenticate("google", { scope: ["profile", "email"] }));
-app.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: "http://localhost:5173" }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/auth/google/callback", passport_1.default.authenticate("google", { failureRedirect: process.env.VITE_API_URL }), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const body = req.body;
     const req_user = req.user;
     const isInterviewer = req.cookies.isInterviewer === "true";
@@ -115,16 +115,16 @@ app.get("/auth/google/callback", passport_1.default.authenticate("google", { fai
         }
     }
     if (isInterviewer) {
-        res.redirect("http://localhost:5173/home/2");
+        res.redirect(`${process.env.VITE_API_URL}/home/2`);
     }
     else {
-        res.redirect("http://localhost:5173/home");
+        res.redirect(`${process.env.VITE_API_URL}/home`);
     }
 }));
 // Logout Route
 app.get("/logout", (req, res) => {
     req.logout(() => {
-        res.redirect("http://localhost:5173");
+        res.redirect(process.env.VITE_API_URL);
     });
 });
 app.get("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {

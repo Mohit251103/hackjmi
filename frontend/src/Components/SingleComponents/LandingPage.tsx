@@ -24,7 +24,7 @@ const LandingPage: React.FC = () => {
         <div
             className={`h-screen w-screen flex justify-center items-center bg-sky-100 flex-col gap-5`}>
             <div className='flex gap-5 justify-center items-center'>
-                <img className="w-40" src="/logo.svg" alt="error"/>
+                <img className="w-40" src={`https://res.cloudinary.com/dmrtl2bh1/image/upload/v1739007450/MockMate.png`} alt="error"/>
                 <div
                     className='text-black inline text-5xl sm:text-8xl font-poppins font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-rose-400 via-sky-500  to-green-600'> Mockmate
                 </div>
