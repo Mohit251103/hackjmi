@@ -7,6 +7,9 @@ interface UserDetails {
     image:string
     isInterviewer:boolean
     isAuth: boolean
+    skills?: string[]
+    interviewCount?: number
+
 }
 interface UserState{
     user:UserDetails|null
