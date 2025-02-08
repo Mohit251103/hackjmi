@@ -2,7 +2,8 @@ import { Button } from "@mui/material"
 import NavbarComponent from "../SingleComponents/NavigationBar.tsx"
 import { useEffect, useState } from "react"
 import axiosInstance from "../../utils/axiosInstance";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import socket from "../../utils/socket.ts";
 
 
 const hardcodedSkills = [
@@ -10,7 +11,7 @@ const hardcodedSkills = [
     "Java", "SQL", "MongoDB", "PostgreSQL", "Docker"
 ];
 
-const SkillPopup = ({user}:{user:any}) => {
+const SkillPopup = ({ user }: { user: any }) => {
 
     const [skills, setSkills] = useState<string[]>([]);
     const [dropdown, setDropdown] = useState<boolean>(false);
@@ -19,7 +20,7 @@ const SkillPopup = ({user}:{user:any}) => {
         if (skills.includes(skill)) {
             return;
         }
-        setSkills( prev => [...prev, skill] );
+        setSkills(prev => [...prev, skill]);
     }
 
     const deleteSkill = (idx: number) => {
@@ -86,11 +87,11 @@ const Candidate = () => {
     useEffect(() => {
         checkAuth();
     }, [])
-    
+
     return (
         <div className="flex-col justify-center items-center">
             <NavbarComponent />
-            {openPopUp && 
+            {openPopUp &&
                 <SkillPopup user={user} />
             }
             <Button variant="outlined" onClick={handleClick}>

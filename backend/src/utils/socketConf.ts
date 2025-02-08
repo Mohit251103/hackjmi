@@ -1,11 +1,26 @@
-import { Server } from "socket.io"
-import http from 'http'
-import express from "express"
+// import { Server } from "socket.io"
+// import server from "../server";
 
-const server = http.createServer(express());
-const io = new Server(server, {
-    cors: { origin: "http://localhost:5173", methods: ["GET", "POST"] }
-});
+// const io = new Server(server, {
+//     cors: {
+//         origin: "http://localhost:5173",  // Change to your frontend URL
+//         methods: ["GET", "POST"],
+//         credentials: true // Allow cookies & authentication
+//     }
+// });
 
-export default io;
+// io.on("connection", (socket) => {
+//     console.log(`⚡ New client connected: ${socket.id}`);
+
+//     socket.on("message", (data) => {
+//         console.log(`📩 Message received: ${data}`);
+//         io.emit("message", data); // Broadcast message to all clients
+//     });
+
+//     socket.on("disconnect", () => {
+//         console.log(`❌ Client disconnected: ${socket.id}`);
+//     });
+// });
+
+// export default io;
 
