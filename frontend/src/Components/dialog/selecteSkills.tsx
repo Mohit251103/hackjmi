@@ -11,12 +11,16 @@ import {
     IconButton,
     Chip,
     Paper,
+    Button,
+    DialogActions
 } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
 import {styled} from '@mui/material/styles';
-import { Close, People } from '@mui/icons-material'
+import { Save, People } from '@mui/icons-material'
 import AddIcon from '@mui/icons-material/Add';
 import {rawskills} from "./rawSkills.ts";
-
+import axiosInstance from "../../utils/axiosInstance.ts";
+import {useUserStore} from "../../store/User.store.ts";
 
 interface SetDetailsDialogProps {
     dialogState: boolean
@@ -31,6 +35,26 @@ const SelectSkills: React.FC<SetDetailsDialogProps> = ({ dialogState, setDialogS
     const [totalSkills, setTotalSkills] = React.useState<string[]>([]);
     const [showFullSkills, setShowFullSkills] = React.useState<string[]>(rawskills);
     const [errorMessage, setErrorMessage] = React.useState<string>('');
+    const user = useUserStore(state=>state.user);
+
+
+    const handleClose = () => {
+        setDialogState(false);
+        setTotalSkills([]);
+        setShowFullSkills(rawskills);
+    }
+
+    const handleStart = async () => {
+        setIsLoading(true);
+         try {
+             const res = await axiosInstance.post("/candidate/start-interview", {userId: user?.id, skills: totalSkills});
+             console.log(res);
+             setIsLoading(false);
+         }catch (error) {
+             console.log(error);
+             setIsLoading(false);
+         }
+    }
 
 
 
@@ -83,12 +107,6 @@ const SelectSkills: React.FC<SetDetailsDialogProps> = ({ dialogState, setDialogS
                         <Typography variant='h5' fontWeight='bold'>
                             Select Skills for Interview
                         </Typography>
-                        <div className={'flex-1'} />
-                        <IconButton
-                            sx={{ marginRight: '-8px' }}
-                            onClick={() => setDialogState(false)}>
-                            <Close />
-                        </IconButton>
                     </Box>
                 </Stack>
             </DialogTitle>
@@ -174,6 +192,23 @@ const SelectSkills: React.FC<SetDetailsDialogProps> = ({ dialogState, setDialogS
                     ))
                 )}
             </DialogContent>
+            <DialogActions sx={{ px: 3, py: 2 }}>
+                <Button
+                    onClick={handleClose}
+                    variant='outlined'
+                    color='error'>
+                    Cancel
+                </Button>
+                <LoadingButton
+                    onClick={handleStart}
+                    loading={isLoading}
+                    loadingPosition='start'
+                    startIcon={<Save />}
+                    variant='contained'
+                    color='primary'>
+                    Start
+                </LoadingButton>
+            </DialogActions>
         </Dialog>
     )
 }

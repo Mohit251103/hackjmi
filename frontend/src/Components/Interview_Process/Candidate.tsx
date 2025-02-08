@@ -110,6 +110,13 @@ const Candidate = () => {
 
   useEffect(() => {
     checkAuth();
+    socket.on("meet-link", ({ link }) => {
+      setLink(link);
+      setMessage("Found Interviewer");
+      setOpen(true);
+      setLoading(false);
+      setShowMeet(true);
+    });
   }, []);
 
   return (
