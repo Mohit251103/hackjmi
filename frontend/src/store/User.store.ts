@@ -5,9 +5,11 @@ interface UserDetails {
     name:string
     email:string
     image:string
-    isInterviewer: boolean
+    isInterviewer:boolean
+    isAuth: boolean
     skills?: string[]
     interviewCount?: number
+
 }
 interface UserState{
     user:UserDetails|null

@@ -3,7 +3,7 @@ import NavbarComponent from "../SingleComponents/NavigationBar.tsx"
 import { useEffect, useState } from "react"
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
-import socket from "../../utils/socket.ts";
+
 
 
 const hardcodedSkills = [

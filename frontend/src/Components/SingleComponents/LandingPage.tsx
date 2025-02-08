@@ -15,9 +15,9 @@ const LandingPage: React.FC = () => {
 
     const handleGoogleLogin = (logger?: string) => {
         if (logger == 'interviewer') {
-            window.location.href = "http://localhost:3000/auth/google?isInterviewer=true";
+            window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google?isInterviewer=true`;
         }
-        else window.location.href = "http://localhost:3000/auth/google";
+        else window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google`;
     };
 
     return (
